@@ -5,4 +5,4 @@ cd "$BASEDIR"
 
 git pull
 
-python ./main/SyncBackup.py $1
+python ./main/SyncBackup.py $@
