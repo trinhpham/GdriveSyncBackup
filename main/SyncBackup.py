@@ -67,6 +67,7 @@ def uploadBackupFile(service, parentFolderId, filePath):
     request = service.files().create(body=body, media_body=media_body)
     response = None
     from apiclient import errors
+    success = True
     while response is None:
         try:
             status, response = request.next_chunk()
@@ -76,10 +77,12 @@ def uploadBackupFile(service, parentFolderId, filePath):
         except errors.HttpError, e:
                 if e.resp.status == 404:
                     print("Error 404! Aborting.")
-                    exit()
+                    success = False
+                    break
                 else:   
                     if retries > MAX_RETRY:
                         print ("Retries limit exceeded! Aborting.")
+                        success = False
                         break
                     else:   
                         retries += 1
@@ -87,7 +90,9 @@ def uploadBackupFile(service, parentFolderId, filePath):
                         time.sleep(2**retries)
                         print ("Error (%d)... retrying." % e.resp.status)
                         continue
-    print ("Upload Complete!")
+    if success:
+        print ("Upload Complete!")
+        os.remove(filePath)
 
 def main():
     """
