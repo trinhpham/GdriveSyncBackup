@@ -1,0 +1,2 @@
+#!/bin/bash
+wget -O /dev/null --http-user=$CPANEL_USERNAME --http-password=$CPANEL_PASSWORD https://localhost:2083/frontend/$CPANEL_THEME/backup/dofullbackup.html --auth-no-challenge --post-data="dest=homedir&email=$EMAIL" --no-check-certificate
