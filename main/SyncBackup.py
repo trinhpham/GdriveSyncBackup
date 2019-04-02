@@ -11,10 +11,16 @@ from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
 from googleapiclient.http import MediaFileUpload
+import resource
 
 ROOT_BACKUP_FOLDER = "server-backup"
 MAX_RETRY = 10
 CHUNK_SIZE = 5 * 1024 * 1024 #5MB
+
+MAX_MEMORY = 256 * 1024 * 1024
+
+soft, hard = resource.getrlimit(resource.RLIMIT_AS)
+resource.setrlimit(resource.RLIMIT_AS, (MAX_MEMORY, hard))
 
 def FindAndCreateIfNotExist(service, parentFolderId, folderName):
     if parentFolderId == None:
