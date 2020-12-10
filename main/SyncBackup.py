@@ -81,7 +81,7 @@ def uploadBackupFile(service, parentFolderId, filePath):
             if status:
                 print ("Uploaded %.2f%%" % (status.progress() * 100))
                 retries = 0
-        except errors.HttpError, e:
+        except errors.HttpError as e:
                 if e.resp.status == 404:
                     print("Error 404! Aborting.")
                     success = False
@@ -147,7 +147,7 @@ def main():
         for f in os.listdir(filePath):
             uploadBackupFile(service, parentFolderId, os.path.join(filePath,f))
     
-    service.close()
+    #service.close()
     
 if __name__ == '__main__':
     main()
