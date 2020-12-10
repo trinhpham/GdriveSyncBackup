@@ -38,7 +38,7 @@ def FindAndCreateIfNotExist(service, parentFolderId, folderName):
     if len(backupDir) > 0:
         backupFile = backupDir[0]
     else:
-        print ("Not found root folder, trying to create: %s" % folderName)
+        print("Not found root folder, trying to create: %s" % folderName)
         if parentFolderId == None:
             body = {'name':folderName, 
                     'mimeType':'application/vnd.google-apps.folder'}
@@ -50,7 +50,7 @@ def FindAndCreateIfNotExist(service, parentFolderId, folderName):
             body=body, 
             fields='id, name').execute()
     if (backupFile.get('id') != ''):
-        print ('Backup Root Folder: %s (%s)' % (backupFile.get('name'), backupFile.get('id')))
+        print('Backup Root Folder: %s (%s)' % (backupFile.get('name'), backupFile.get('id')))
     
     return backupFile
 
@@ -79,7 +79,7 @@ def uploadBackupFile(service, parentFolderId, filePath):
         try:
             status, response = request.next_chunk()
             if status:
-                print ("Uploaded %.2f%%" % (status.progress() * 100))
+                print("Uploaded %.2f%%" % (status.progress() * 100))
                 retries = 0
         except errors.HttpError as e:
                 if e.resp.status == 404:
@@ -88,17 +88,17 @@ def uploadBackupFile(service, parentFolderId, filePath):
                     break
                 else:   
                     if retries > MAX_RETRY:
-                        print ("Retries limit exceeded! Aborting.")
+                        print("Retries limit exceeded! Aborting.")
                         success = False
                         break
                     else:   
                         retries += 1
                         import time
                         time.sleep(2**retries)
-                        print ("Error (%d)... retrying." % e.resp.status)
+                        print("Error (%d)... retrying." % e.resp.status)
                         continue
     if success:
-        print ("Upload Complete!")
+        print("Upload Complete!")
         os.remove(filePath)
 
 def main():
@@ -121,7 +121,10 @@ def main():
     if not creds or creds.invalid:
         flow = client.flow_from_clientsecrets('client_secret.json', SCOPES)
         creds = tools.run_flow(flow, store)
-    service = build('drive', 'v3', http=creds.authorize(Http()))
+    
+    http = Http()
+    http.redirect_codes = http.redirect_codes - {308}
+    service = build('drive', 'v3', http=creds.authorize(http))
     
     # Find the backup root folder or else, create it
     backupFile = FindAndCreateIfNotExist(service, None, ROOT_BACKUP_FOLDER)
