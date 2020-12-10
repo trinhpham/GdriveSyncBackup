@@ -21,6 +21,7 @@ MAX_MEMORY = 256 * 1024 * 1024
 
 soft, hard = resource.getrlimit(resource.RLIMIT_AS)
 resource.setrlimit(resource.RLIMIT_AS, (MAX_MEMORY, hard))
+print("Current limit: %s, %s | New: %s" %(soft, hard, MAX_MEMORY))
 
 def FindAndCreateIfNotExist(service, parentFolderId, folderName):
     if parentFolderId == None:
@@ -145,6 +146,8 @@ def main():
     else:
         for f in os.listdir(filePath):
             uploadBackupFile(service, parentFolderId, os.path.join(filePath,f))
+    
+    service.close()
     
 if __name__ == '__main__':
     main()
