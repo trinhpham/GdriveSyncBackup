@@ -4,6 +4,8 @@ BASEDIR=$(dirname "$0")
 
 cd "$BASEDIR"
 
+echo "Working at $BASEDIR | $(date)"
+
 pip install --user -r requirements.txt
 
 PARENT_FOLDER=$2
