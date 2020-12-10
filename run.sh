@@ -2,8 +2,9 @@
 
 BASEDIR=$(dirname "$0")
 
-pip install --upgrade oauth2client
-pip install --upgrade google-api-python-client
+cd "$BASEDIR"
+
+pip install --user -r requirements.txt
 
 PARENT_FOLDER=$2
 if [ -z "$PARENT_FOLDER" ]
@@ -18,7 +19,6 @@ then
 fi
 
 echo "Input: $INPUT_NAME"
-cd "$BASEDIR"
 
 git pull
 python ./main/SyncBackup.py $INPUT_NAME
